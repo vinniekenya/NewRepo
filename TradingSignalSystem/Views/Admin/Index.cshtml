@@ -1,0 +1,88 @@
+﻿@model List<TradingSignalsApp.Models.User>
+
+<div class="container mt-4">
+    <h2>👑 Admin Panel — All Users</h2>
+
+    <a href="/Dashboard/Index" class="btn btn-secondary mb-3">
+        ← Back to Dashboard
+    </a>
+
+    <table class="table table-dark table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Approved</th>
+                <th>VIP</th>
+                <th>Registered</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Username</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <span class="badge @(user.Role == "Admin" ? "bg-danger" :
+                                                                           user.Role == "VIP" ? "bg-warning" : "bg-secondary")">
+                        @user.Role
+                    </span>
+                </td>
+                <td>
+                    @if (user.IsApproved)
+                        {
+                            <span class="badge bg-success">✅ Approved</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">❌ Pending</span>
+                        }
+                    </td>
+                    <td>
+                        @if (user.HasPaid)
+                        {
+                            <span class="badge bg-warning">⭐ VIP</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Free</span>
+                        }
+                    </td>
+                    <td>@user.CreatedAt.ToString("dd MMM yyyy")</td>
+                    <td>
+                        @if (!user.IsApproved)
+                        {
+                            <a href="/Admin/Approve/@user.Id"
+                               class="btn btn-success btn-sm">✅ Approve</a>
+                        }
+                        else
+                        {
+                            <a href="/Admin/Reject/@user.Id"
+                               class="btn btn-warning btn-sm">🚫 Reject</a>
+                        }
+
+                        @if (!user.HasPaid)
+                        {
+                            <a href="/Admin/MakeVip/@user.Id"
+                               class="btn btn-warning btn-sm">⭐ Make VIP</a>
+                        }
+                        else
+                        {
+                            <a href="/Admin/RemoveVip/@user.Id"
+                               class="btn btn-secondary btn-sm">Remove VIP</a>
+                        }
+
+                        <a href="/Admin/Delete/@user.Id"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure?')">🗑️ Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

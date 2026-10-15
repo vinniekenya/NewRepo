@@ -1,0 +1,159 @@
+﻿@model TradingSignalSystem.Models.DashboardViewModel
+
+<div class="container mt-4">
+
+    <!-- 👑 ADMIN PANEL BUTTON -->
+    @if (Context.Session.GetString("UserRole") == "Admin")
+    {
+        <a href="/Admin/Index" class="btn btn-danger mb-3">
+            👑 Admin Panel
+        </a>
+    }
+
+    <!-- ⭐ VIP STATUS -->
+    @if (Model.IsVip)
+    {
+        <div class="alert alert-warning text-center">
+            ⭐ VIP Member — You have access to all pairs!
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            🔒 Free Account — You can only see <b>USDJPY</b>.
+            <a href="/Account/Upgrade" class="btn btn-warning btn-sm ms-2">
+                ⭐ Upgrade to VIP
+            </a>
+        </div>
+    }
+
+    <!-- 🔥 NEWS STATUS -->
+    @if (Model.BlockTrade == true)
+    {
+        <div class="alert alert-danger text-center">
+            🚨 High Impact News Detected — Trading Disabled
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success text-center">
+            ✅ Market Safe — Trading Allowed
+        </div>
+    }
+
+    <h2 class="text-center mb-4">📊 Trading Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card best-trade mb-4">
+                @if (Model.BestSignal != null)
+                {
+                    <h4>🔥 BEST TRADE</h4>
+                    <p><b>Pair:</b> @Model.BestSignal.Pair</p>
+                    <p>
+                        <b>Signal:</b>
+                        <span class="badge @(Model.BestSignal.Signal == "BUY" ? "bg-success" :
+                                                                           Model.BestSignal.Signal == "SELL" ? "bg-danger" : "bg-secondary")">
+                        @Model.BestSignal.Signal
+                    </span>
+                </p>
+                <p><b>Confidence:</b> @Model.BestSignal.Confidence %</p>
+                <div class="progress mb-3">
+                    <div class="progress-bar bg-info" style="width:@Model.BestSignal.Confidence%"></div>
+                </div>
+                @if (Model.BestSignal.Entry != 0)
+                    {
+                        <p><b>Entry:</b> @Model.BestSignal.Entry</p>
+                        <p><b>Stop Loss:</b> @Model.BestSignal.StopLoss</p>
+                        <p><b>Take Profit:</b> @Model.BestSignal.TakeProfit</p>
+                        <p class="text-info">@Model.BestSignal.Explanation</p>
+                    }
+                }
+                else
+                {
+                    <h4 class="text-warning">No strong trade found</h4>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <h4>📊 Signal Distribution</h4>
+                <canvas id="signalChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <h4>📌 All Signals</h4>
+        <table class="table table-dark table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Pair</th>
+                    <th>Signal</th>
+                    <th>Confidence</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Signals != null)
+                {
+                    @foreach (var item in Model.Signals)
+                    {
+                        <tr>
+                            <td>@item.Pair</td>
+                            <td>
+                                <span class="badge @(item.Signal == "BUY" ? "bg-success" :
+                                                                                           item.Signal == "SELL" ? "bg-danger" : "bg-secondary")">
+                            @item.Signal
+                        </span>
+                    </td>
+                    <td>@item.Confidence %</td>
+                </tr>
+                                }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h4>📰 Forex News</h4>
+        <p>No news available or API failed.</p>
+    </div>
+
+    <div class="mt-4">
+        <a href="/Account/Logout" class="btn btn-outline-danger">🚪 Logout</a>
+    </div>
+
+</div>
+
+@{
+    var buy = 0;
+    var sell = 0;
+    var hold = 0;
+    if (Model.Signals != null)
+    {
+        buy = Model.Signals.Count(x => x.Signal == "BUY");
+        sell = Model.Signals.Count(x => x.Signal == "SELL");
+        hold = Model.Signals.Count(x => x.Signal == "HOLD");
+    }
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var buy  = @buy;
+        var sell = @sell;
+        var hold = @hold;
+        var ctx = document.getElementById('signalChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ["BUY", "SELL", "HOLD"],
+                datasets: [{
+                    data: [buy, sell, hold],
+                    backgroundColor: ["#00ff88", "#ff4d4d", "#999999"]
+                }]
+            }
+        });
+    </script>
+}

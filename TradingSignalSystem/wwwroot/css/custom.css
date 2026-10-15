@@ -1,0 +1,86 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #000000);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+    color: white;
+}
+
+/* background animation */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* glow overlay */
+body::before {
+    content: "";
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0,255,200,0.08), transparent 70%);
+    animation: moveGlow 18s linear infinite;
+    z-index: -1;
+}
+
+@keyframes moveGlow {
+    0% {
+        transform: translate(-25%, -25%);
+    }
+
+    50% {
+        transform: translate(25%, 25%);
+    }
+
+    100% {
+        transform: translate(-25%, -25%);
+    }
+}
+
+/* glass cards */
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(12px);
+    padding: 20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    transition: 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+/* table */
+table {
+    color: white;
+}
+
+/* best trade glow */
+.best-trade {
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 20px #00ffcc;
+}
+
+/* progress bar */
+.progress {
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}

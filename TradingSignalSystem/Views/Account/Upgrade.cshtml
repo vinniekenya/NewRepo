@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Upgrade to VIP";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card p-4">
+                <h2 class="text-center mb-4">⭐ Upgrade to VIP</h2>
+
+                <!-- 🔥 VIP BENEFITS -->
+                <div class="alert alert-warning">
+                    <h5>VIP Benefits:</h5>
+                    <ul>
+                        <li>✅ Access to all trading pairs</li>
+                        <li>✅ EURUSD, GBPUSD, AUDJPY, AUDUSD, USDCAD, BTCUSD</li>
+                        <li>✅ Real-time signals from 5 strategies</li>
+                        <li>✅ Priority support</li>
+                    </ul>
+                    <h5 class="text-danger">Price: KES 2,000 / month</h5>
+                </div>
+
+                <!-- 🔥 MPESA PAYMENT INSTRUCTIONS -->
+                <div class="alert alert-info">
+                    <h5>How to Pay via M-Pesa:</h5>
+                    <ol>
+                        <li>Go to <b>M-Pesa</b> on your phone</li>
+                        <li>Select <b>Send Money</b></li>
+                        <li>Enter number: <b>0798138744</b></li>
+                        <li>Enter amount: <b>KES 2,500</b></li>
+                        <li>Enter your name as reference</li>
+                        <li>Copy the <b>M-Pesa code</b> you receive</li>
+                        <li>Paste it below and submit</li>
+                    </ol>
+                </div>
+
+                <!-- 🔥 SUBMIT MPESA CODE -->
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">M-Pesa Transaction Code</label>
+                        <input type="text"
+                               name="mpesaCode"
+                               class="form-control"
+                               placeholder="e.g. QDK1234XYZ"
+                               required />
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">
+                        ⭐ Submit Payment
+                    </button>
+                </form>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+                }
+
+                @if (ViewBag.Success != null)
+                {
+                    <div class="alert alert-success mt-3">@ViewBag.Success</div>
+                }
+
+                <div class="text-center mt-3">
+                    <a href="/Dashboard/Index" class="btn btn-secondary">
+                        ← Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
